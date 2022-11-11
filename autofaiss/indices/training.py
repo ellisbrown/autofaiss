@@ -78,7 +78,9 @@ def _train_index(
         res = faiss.StandardGpuResources()
         dev_no = 0
         # transfer to GPU (may be partial).
-        index = faiss.index_cpu_to_gpu(res, dev_no, index)
+        co = faiss.GpuClonerOptions()
+        co.useFloat16 = True
+        index = faiss.index_cpu_to_gpu(res, dev_no, index, co)
 
     with Timeit(
         f"-> Training the index with {train_vectors.shape[0]} vectors of dim {train_vectors.shape[1]}", indent=2
